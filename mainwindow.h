@@ -9,6 +9,8 @@
 #include <Qvector>
 #include <QRgb>
 
+using namespace cv;
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,6 +27,9 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    Mat *image;
+private slots:
+
 
 };
 
