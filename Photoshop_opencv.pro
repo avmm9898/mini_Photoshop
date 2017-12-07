@@ -39,11 +39,13 @@ CONFIG(release,debug|release)
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    photo_frame.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    photo_frame.h
 
 FORMS += \
         mainwindow.ui \
-    tool.ui
+    photo_frame.ui
