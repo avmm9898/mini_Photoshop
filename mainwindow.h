@@ -31,16 +31,16 @@ public:
 public slots:
     QImage MainWindow::Mat2QImage(Mat src);
 
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_blur_btn_clicked();
 
 private:
     Ui::MainWindow *ui;
 
 private slots:
     void MainWindow::photo_window_update();
-
-    void on_pushButton_3_clicked();
+    void MainWindow::Blur();
+    void on_undo_btn_clicked();
+    void on_redo_btn_clicked();
 };
 
 #endif // MAINWINDOW_H

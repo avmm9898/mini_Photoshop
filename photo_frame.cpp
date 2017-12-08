@@ -15,7 +15,7 @@ photo_frame::photo_frame(QWidget *parent) :
 }
 void photo_frame::frame_in(){
     int fix_image_height=800;
-    Pixmap=QPixmap::fromImage(Mat2QImage(image));
+    Pixmap=QPixmap::fromImage(Mat2QImage(image[currentstep]));
     Pixmap=Pixmap.scaledToHeight(fix_image_height);
     int image_width=Pixmap.width();             //which is the width after scaled
     ui->label->setGeometry(0,0,image_width,fix_image_height);

@@ -14,7 +14,8 @@
 #include "QLabel"
 
 using namespace cv;
-extern Mat image;
+extern Mat image[];
+extern int currentstep;
 
 namespace Ui {
 class photo_frame;

@@ -5,7 +5,8 @@
 using namespace std;
 using namespace cv;
 
-Mat image;
+Mat image[100];
+int currentstep=0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -13,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //Photo_frame.setEnabled(false);
     ui->setupUi(this);
     this->setWindowTitle(tr("Tool Box"));
-
-
+    image[0]=imread("D://Photos/BB8/BB8.jpg");
+//image[0]=imread("D://Photos/BB8/15609246_1219648224796806_584233906_o.jpg");
     //QString filename=QFileDialog::getOpenFileName(this,tr("Select an Image"),"/home","Images(*.png *.bmp *.jpg)");
     //Mat image=imread(filename.toStdString());
 
@@ -59,22 +60,43 @@ void MainWindow::photo_window_update(){
     P_frame.frame_in();
     P_frame.show();
 }
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_blur_btn_clicked()
 {
 
-
-    image=imread("D://Photos/BB8/BB8.jpg");
-
-
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-    image=imread("D://Photos/BB8/P1060866.JPG");
-
-}
-
-void MainWindow::on_pushButton_3_clicked()
-{
+    GaussianBlur(image[currentstep],image[currentstep+1],Size(9,9),0,0);
     photo_window_update();
+    currentstep++;
+    ui->label->setText(QString::number(currentstep));
+
+
+}
+
+
+
+void MainWindow::on_undo_btn_clicked()
+{
+    //image[0]=imread("D://Photos/BB8/15609246_1219648224796806_584233906_o.jpg");
+    if(currentstep>0)
+        ui->undo_btn->setEnabled(true);
+    else
+        ui->undo_btn->setEnabled(false);
+
+    if(image[currentstep+1].size!=0)
+        ui->redo_btn->setEnabled(true);
+    else
+        ui->redo_btn->setEnabled(false);
+}
+
+void MainWindow::on_redo_btn_clicked()
+{
+    //image[0]=imread("D://Photos/BB8/BB8.jpg");
+    if(currentstep>0)
+        ui->undo_btn->setEnabled(true);
+    else
+        ui->undo_btn->setEnabled(false);
+
+    if(image[currentstep+1].size!=0)
+        ui->redo_btn->setEnabled(true);
+    else
+        ui->redo_btn->setEnabled(false);
 }
