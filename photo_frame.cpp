@@ -127,12 +127,13 @@ void photo_frame::on_zoomout_btn_clicked()
 
 void photo_frame::on_fit_btn_clicked()
 {
-    float pixmap_height_f=float(ui->scrollArea->height())-20;
+    float pixmap_height_f=float(ui->scrollArea->height())-40;
     zoom_times=pixmap_height_f/float(pixmap_height);
     int pixmap_height_t=pixmap_height*zoom_times;
     QPixmap ZPixmap=Pixmap.scaledToHeight(pixmap_height_t);
     if(ui->scrollArea->width()<ZPixmap.width()){
-       this->resize(ZPixmap.width()+20,this->height());
+        if(!this->isMaximized()){
+       this->resize(ZPixmap.width()+20,this->height());}
     }
     ui->label->setPixmap(ZPixmap);
 }
