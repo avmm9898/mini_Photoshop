@@ -30,14 +30,14 @@ public:
     explicit photo_frame(QWidget *parent = 0);
     ~photo_frame();
 
-    void photo_frame::frame_load(Mat);
-    void photo_frame::frame_update(Mat);
+    void frame_load(Mat);
+    void frame_update(Mat);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
 public slots:
-    QImage photo_frame::Mat2QImage(Mat src);
+    QImage Mat2QImage(Mat src);
 
 
 private slots:
