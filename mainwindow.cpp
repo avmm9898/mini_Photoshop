@@ -8,6 +8,10 @@ using namespace cv;
 Mat image[100];
 int currentstep=0;
 
+String face_cascade_name = "C://opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml";
+String eyes_cascade_name = "C://opencv/sources/data/lbpcascades/haarcascade_eye_tree_eyeglasses.xml";
+CascadeClassifier face_cascade;
+CascadeClassifier eyes_cascade;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -19,8 +23,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //image[0]=imread("D://Photos/BB8/15609246_1219648224796806_584233906_o.jpg");
     //cvtColor(image,image,CV_RGB2BGR);
     //imshow("new",image[0]);
+    //-- 1. Load the cascade
+    if(!face_cascade.load("C:/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml") )
+        ui->label_2->setText("--(!)Error loading face cascade\n");
 
-    un_redo();
+    if(!eyes_cascade.load("C:/opencv/sources/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml") )
+        ui->label_2->setText("--(!)Error loading eyes cascade\n");
+
+
 
     ui->brightness_slider->setMinimum(-10);
     ui->brightness_slider->setMaximum(10);
@@ -40,16 +50,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    if(!image[currentstep].empty()){
-        QString Simgpath=QFileDialog::getSaveFileName(this, tr("Save File"),"/",tr("PNG(*.png);;JPG(*.jpg)"));
-        if(!Simgpath.isNull()){
-            imwrite(Simgpath.toStdString(),image[currentstep]);
+
+
+    QMessageBox message(QMessageBox::NoIcon, "Save", "Do you want to save photo?", QMessageBox::Yes | QMessageBox::No, NULL);
+    if(message.exec() == QMessageBox::Yes)
+    {
+        if(!image[currentstep].empty()){
+            QString Simgpath=QFileDialog::getSaveFileName(this, tr("Save File"),"/",tr("PNG(*.png);;JPG(*.jpg)"));
+            if(!Simgpath.isNull()){
+                imwrite(Simgpath.toStdString(),image[currentstep]);
+            }
         }
     }
+
     for(int i=0;i<100;i++){
         image[i].release();
     }
-
     delete ui;
 }
 
@@ -181,8 +197,10 @@ void MainWindow::on_magic_set_btn_clicked()
     int index;
 
     index= ui->magicbox->currentIndex();
-
+    Mat grad_x, grad_y;
+    Mat abs_grad_x, abs_grad_y;
     switch(index){
+
     case 0:
         if(image[currentstep].channels()!=1){
             cvtColor(image[currentstep],image[currentstep+1], COLOR_BGR2GRAY,1);
@@ -201,8 +219,7 @@ void MainWindow::on_magic_set_btn_clicked()
         }
         break;
     case 2:
-        Mat grad_x, grad_y;
-        Mat abs_grad_x, abs_grad_y;
+
         //求X方向梯度
         Sobel( image[currentstep], grad_x, CV_16S, 1, 0, 3, 1, 1, BORDER_DEFAULT );
         convertScaleAbs( grad_x, abs_grad_x );
@@ -212,6 +229,12 @@ void MainWindow::on_magic_set_btn_clicked()
         //合併梯度(近似)
         addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, image[currentstep+1] );
         currentstep++;
+        break;
+    case 3:
+        detectAndDisplay(image[0]);
+        break;
+    default:
+        break;
     }
 
 
@@ -278,4 +301,41 @@ void MainWindow::on_set_con_btn_clicked()
     photo_window_update(image[currentstep],0);
     un_redo();
     ui->contrast_slider->setValue(0);
+}
+
+void MainWindow::detectAndDisplay(Mat frame)
+{
+    std::vector<Rect> faces;
+    Mat frame_gray;
+
+    cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
+    equalizeHist( frame_gray, frame_gray );
+
+    //-- Detect faces
+    face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CASCADE_SCALE_IMAGE, Size(10, 10) );
+
+    for ( size_t i = 0; i < faces.size(); i++ )
+    {
+        Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+        ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
+
+        Mat faceROI = frame_gray( faces[i] );
+        std::vector<Rect> eyes;
+
+        //-- In each face, detect eyes
+        eyes_cascade.detectMultiScale( faceROI, eyes, 1.1, 2, 0 |CASCADE_SCALE_IMAGE, Size(30, 30) );
+
+        for ( size_t j = 0; j < eyes.size(); j++ )
+        {
+            Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
+            int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
+            circle( frame, eye_center, radius, Scalar( 255, 0, 0 ), 4, 8, 0 );
+        }
+    }
+    //-- Show what you got
+    //imshow( "window_name", frame );
+    image[currentstep+1]=frame.clone();
+    currentstep++;
+    /*photo_window_update(image[currentstep],0);
+    un_redo();*/
 }

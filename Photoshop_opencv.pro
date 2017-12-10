@@ -29,12 +29,12 @@ INCLUDEPATH +=C:\opencv\build\include
 
 CONFIG(debug,debug|release)
 {
-    LIBS += C:\opencv\build\x64\vc14\lib\opencv_world320d.lib
+    LIBS += C:\opencv\build\x64\vc14\lib\opencv_world331d.lib
 
 }
 CONFIG(release,debug|release)
 {
-    LIBS += C:\opencv\build\x64\vc14\lib\opencv_world320.lib
+    LIBS += C:\opencv\build\x64\vc14\lib\opencv_world331.lib
 }
 
 SOURCES += \

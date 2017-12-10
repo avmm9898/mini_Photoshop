@@ -44,6 +44,7 @@ private:
 private slots:
     void photo_window_update(Mat, int);
     void un_redo();
+    void detectAndDisplay(Mat);
 
     void on_actionOpen_File_triggered();
     void on_actionUndo_triggered();
