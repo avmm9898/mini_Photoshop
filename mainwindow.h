@@ -9,9 +9,12 @@
 #include <QPixmap>
 #include <Qvector>
 #include <QRgb>
-#include "QPushButton"
-#include "QVBoxLayout"
-#include "QLabel"
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QMessageBox>
+#include <QTimer>
+
 
 using namespace cv;
 
@@ -27,20 +30,32 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    //photo_frame P_frame;
-public slots:
-    QImage MainWindow::Mat2QImage(Mat src);
 
-    void on_blur_btn_clicked();
+public slots:
+
+
+
 
 private:
     Ui::MainWindow *ui;
+    QTimer *myTimer;
+
 
 private slots:
-    void MainWindow::photo_window_update();
-    void MainWindow::Blur();
-    void on_undo_btn_clicked();
-    void on_redo_btn_clicked();
+    void photo_window_update(Mat, int);
+    void un_redo();
+
+    void on_actionOpen_File_triggered();
+    void on_actionUndo_triggered();
+    void on_actionRedo_triggered();
+    void on_actionSave_File_triggered();
+    void on_shapen_btn_clicked();
+    void on_blur_btn_clicked();
+    void on_magic_set_btn_clicked();
+    void on_contrast_slider_sliderReleased();
+    void on_brightness_slider_sliderReleased();
+    void on_set_bright_btn_clicked();
+    void on_set_con_btn_clicked();
 };
 
 #endif // MAINWINDOW_H

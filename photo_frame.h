@@ -9,14 +9,15 @@
 #include <QPixmap>
 #include <Qvector>
 #include <QRgb>
-#include "QPushButton"
-#include "QVBoxLayout"
-#include "QLabel"
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QMouseEvent>
+#include <QMessageBox>
 
 using namespace cv;
 extern Mat image[];
 extern int currentstep;
-
 namespace Ui {
 class photo_frame;
 }
@@ -29,10 +30,25 @@ public:
     explicit photo_frame(QWidget *parent = 0);
     ~photo_frame();
 
-    void photo_frame::frame_in();
+    void photo_frame::frame_load(Mat);
+    void photo_frame::frame_update(Mat);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 public slots:
     QImage photo_frame::Mat2QImage(Mat src);
+
+
+private slots:
+
+    void on_zoomin_btn_clicked();
+
+    void on_zoomout_btn_clicked();
+
+    void on_fit_btn_clicked();
+
+    void on_ori_btn_clicked();
 
 private:
     Ui::photo_frame *ui;
