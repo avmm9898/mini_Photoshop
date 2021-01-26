@@ -40,12 +40,12 @@ CONFIG(release,debug|release)
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    photo_frame.cpp
+        photo_frame.cpp
 
 HEADERS += \
         mainwindow.h \
-    photo_frame.h
+        photo_frame.h
 
 FORMS += \
         mainwindow.ui \
-    photo_frame.ui
+        photo_frame.ui
