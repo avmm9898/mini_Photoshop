@@ -1,6 +1,6 @@
 # mini_Photoshop
 
-影像處理 GUI 入門實作練習
+影像處理 GUI 工具
 
 環境:Qt C++ 5.15.2, openCV 3.3.1, MSVC 2019 64bit
 
